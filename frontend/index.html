@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Brandbook Home</title>
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="font-sans text-gray-800">
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside class="w-1/4 bg-gray-50 p-6 hidden md:block">
+            <div class="mb-10 flex items-center space-x-3">
+                <!-- Placeholder avatar -->
+                <div class="w-12 h-12 rounded-full bg-gray-300"></div>
+                <span class="font-bold text-lg">WEB®BRAND</span>
+            </div>
+            <nav class="space-y-4 mt-4">
+                <a href="#" class="block py-2 px-3 rounded hover:bg-gray-200">About Us</a>
+                <a href="projects.html" class="block py-2 px-3 rounded hover:bg-gray-200">Projects</a>
+                <a href="community.html" class="block py-2 px-3 rounded hover:bg-gray-200">Community</a>
+                <a href="help.html" class="block py-2 px-3 rounded hover:bg-gray-200">Help</a>
+            </nav>
+        </aside>
+
+        <!-- Main content -->
+        <main class="flex-1 p-8 relative">
+            <!-- Top right controls -->
+            <div class="flex justify-end space-x-4 mb-6">
+                <button class="py-2 px-4 bg-black text-white rounded-full text-sm hover:bg-gray-800">+ New Brandbook</button>
+                <button id="login-btn" class="py-2 px-4 border border-gray-300 rounded-full text-sm hover:bg-gray-100">Log in</button>
+            </div>
+
+            <!-- Hero text -->
+            <div class="text-7xl md:text-8xl font-black leading-none mb-6">
+                <span class="block">WE</span>
+                <span class="block">BRAND</span><sup class="text-xl align-top">®</sup>
+            </div>
+
+            <!-- Call to action buttons -->
+            <div class="flex space-x-4 mb-8">
+                <button class="flex items-center border border-gray-300 py-2 px-4 rounded-md bg-white shadow-sm hover:bg-gray-50">
+                    <span class="mr-2"><i class="fab fa-google"></i></span> Sign in with Google
+                </button>
+                <button id="login-btn-secondary" class="border border-gray-300 py-2 px-6 rounded-md bg-white hover:bg-gray-50">Log in</button>
+            </div>
+
+            <!-- Subheading and description -->
+            <h2 class="text-2xl font-semibold mb-4">Your Smart Branding Solution!</h2>
+            <p class="max-w-2xl mb-6 text-gray-700">
+                At BrandBook Online, we help businesses, startups, and creators build consistent, powerful brands effortlessly. Our intuitive online tool guides you step by step—from logo usage and color palettes to typography and brand voice. No design skills? No problem!
+            </p>
+
+            <!-- Features list -->
+            <ul class="mb-10 space-y-3 text-gray-700">
+                <li class="flex items-start">
+                    <span class="text-green-500 mr-2">✔</span>
+                    <span>Easy & Fast – Create a polished brand book in just a few clicks.</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-green-500 mr-2">✔</span>
+                    <span>Custom Templates – Adapt ready-made designs to fit your unique style.</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-green-500 mr-2">✔</span>
+                    <span>Always Accessible – Edit, download, and share your brand guidelines anytime.</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-green-500 mr-2">✔</span>
+                    <span>Team Collaboration – Invite members to contribute and keep branding consistent.</span>
+                </li>
+            </ul>
+
+            <!-- Placeholder images -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+                <div class="bg-gray-200 h-48 rounded"></div>
+                <div class="bg-gray-200 h-48 rounded"></div>
+            </div>
+
+            <!-- Additional description -->
+            <p class="max-w-2xl mb-4 text-gray-700">
+                Whether you're launching a startup, rebranding, or scaling your business, BrandBook Online ensures your brand looks professional—everywhere.
+            </p>
+            <p class="max-w-2xl mb-6 text-gray-700">
+                Start building your brand identity today—it's free to try!
+            </p>
+
+            <!-- Create new brandbook button -->
+            <div class="mb-20">
+                <button class="flex flex-col items-center justify-center border border-gray-300 rounded-lg p-10 hover:bg-gray-50">
+                    <span class="text-4xl font-light mb-2">+</span>
+                    <span>Create new brandbook</span>
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="login-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+        <div class="relative bg-white w-96 p-6 rounded-lg shadow-lg">
+            <button id="close-login" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-2xl">×</button>
+            <h3 class="text-center text-xl font-semibold mb-4">Log in or create an account</h3>
+            <button class="flex items-center justify-center w-full border border-gray-300 py-2 px-4 rounded-md mb-4 bg-red-500 text-white hover:bg-red-600">
+                <i class="fab fa-google mr-2"></i> Sign in with Google
+            </button>
+            <input type="email" placeholder="Email" class="w-full border border-gray-300 py-2 px-3 rounded-md mb-3" />
+            <input type="password" placeholder="Password" class="w-full border border-gray-300 py-2 px-3 rounded-md mb-3" />
+            <button class="w-full bg-black text-white py-2 rounded-md mb-2 hover:bg-gray-800">Log in</button>
+            <p class="text-center text-sm mb-1">No account? <a href="#" class="text-blue-600 underline">Create one</a></p>
+            <p class="text-center text-sm"><a href="#" class="text-blue-600 underline">Reset password</a></p>
+        </div>
+    </div>
+
+    <script src="scripts.js"></script>
+</body>
+</html>

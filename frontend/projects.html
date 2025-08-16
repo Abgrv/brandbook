@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Brandbook Projects</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+      /* Ensure context menu appears above other elements */
+      .dropdown-menu { display: none; position: absolute; right: 0; z-index: 10; }
+      .dropdown-menu.show { display: block; }
+    </style>
+</head>
+<body class="font-sans text-gray-800">
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside class="w-1/4 bg-gray-50 p-6 hidden md:block">
+            <div class="mb-10 flex items-center space-x-3">
+                <div class="w-12 h-12 rounded-full bg-gray-300"></div>
+                <span class="font-bold text-lg">WEB®BRAND</span>
+            </div>
+            <nav class="space-y-4 mt-4">
+                <a href="index.html" class="block py-2 px-3 rounded hover:bg-gray-200">About Us</a>
+                <a href="#" class="block py-2 px-3 rounded hover:bg-gray-200">Projects</a>
+                <a href="community.html" class="block py-2 px-3 rounded hover:bg-gray-200">Community</a>
+                <a href="help.html" class="block py-2 px-3 rounded hover:bg-gray-200">Help</a>
+            </nav>
+        </aside>
+
+        <!-- Main content -->
+        <main class="flex-1 p-8 relative">
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-2xl font-bold">Projects</h1>
+                <button class="py-2 px-4 bg-black text-white rounded-full text-sm hover:bg-gray-800">+ New Brandbook</button>
+            </div>
+
+            <!-- Search and filter -->
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 space-y-4 sm:space-y-0">
+                <input type="text" placeholder="Search" class="border border-gray-300 rounded-full py-2 px-4 w-full sm:w-1/2" />
+                <div class="flex space-x-2">
+                    <button class="px-4 py-2 bg-black text-white rounded-full text-sm">All</button>
+                    <button class="px-4 py-2 bg-gray-200 rounded-full text-sm">Latest</button>
+                </div>
+            </div>
+
+            <!-- Card grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Card 1 -->
+                <div class="group relative">
+                    <div class="h-40 bg-black rounded-md"></div>
+                    <div class="mt-2 flex justify-between items-center">
+                        <span class="font-medium">Savora</span>
+                        <button class="dropdown-toggle text-gray-600 hover:text-gray-900 focus:outline-none"><i class="fas fa-ellipsis-v"></i></button>
+                    </div>
+                    <div class="dropdown-menu absolute right-0 mt-2 w-32 bg-white border border-gray-200 rounded shadow-md py-2">
+                        <a href="#" class="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100">Share</a>
+                        <a href="#" class="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100">Edit</a>
+                        <a href="#" class="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100">Download PDF</a>
+                        <a href="#" class="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100">Rename</a>
+                        <a href="#" class="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100">Delete</a>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="group relative">
+                    <div class="h-40 bg-yellow-400 rounded-md"></div>
+                    <div class="mt-2 flex justify-between items-center">
+                        <span class="font-medium">Savora</span>
+                        <button class="dropdown-toggle text-gray-600 hover:text-gray-900 focus:outline-none"><i class="fas fa-ellipsis-v"></i></button>
+                    </div>
+                    <div class="dropdown-menu absolute right-0 mt-2 w-32 bg-white border border-gray-200 rounded shadow-md py-2">
+                        <a href="#" class="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100">Share</a>
+                        <a href="#" class="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100">Edit</a>
+                        <a href="#" class="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100">Download PDF</a>
+                        <a href="#" class="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100">Rename</a>
+                        <a href="#" class="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100">Delete</a>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="group relative">
+                    <div class="h-40 bg-pink-500 rounded-md"></div>
+                    <div class="mt-2 flex justify-between items-center">
+                        <span class="font-medium">Savora</span>
+                        <button class="dropdown-toggle text-gray-600 hover:text-gray-900 focus:outline-none"><i class="fas fa-ellipsis-v"></i></button>
+                    </div>
+                    <div class="dropdown-menu absolute right-0 mt-2 w-32 bg-white border border-gray-200 rounded shadow-md py-2">
+                        <a href="#" class="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100">Share</a>
+                        <a href="#" class="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100">Edit</a>
+                        <a href="#" class="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100">Download PDF</a>
+                        <a href="#" class="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100">Rename</a>
+                        <a href="#" class="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100">Delete</a>
+                    </div>
+                </div>
+
+                <!-- Create new card -->
+                <div class="flex flex-col items-center justify-center border border-gray-300 rounded-lg p-8 hover:bg-gray-50">
+                    <span class="text-4xl font-light mb-2">+</span>
+                    <span>Create new brandbook</span>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Toggle dropdown menus on click
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggles = document.querySelectorAll('.dropdown-toggle');
+            toggles.forEach(function(btn) {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const menu = btn.parentElement.parentElement.querySelector('.dropdown-menu');
+                    menu.classList.toggle('show');
+                });
+            });
+            // Close menus when clicking outside
+            document.addEventListener('click', function(e) {
+                toggles.forEach(function(btn) {
+                    const menu = btn.parentElement.parentElement.querySelector('.dropdown-menu');
+                    if (!btn.contains(e.target) && !menu.contains(e.target)) {
+                        menu.classList.remove('show');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
