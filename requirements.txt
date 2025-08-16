@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]           # сервер для запуска FastAPI
+sqlalchemy                  # ORM
+alembic                     # миграции
+psycopg2-binary             # PostgreSQL драйвер
+passlib[bcrypt]             # для хеширования паролей
+python-jose[cryptography]  # JWT токены
+python-dotenv               # .env поддержка
+pydantic[email]             # схемы валидации
