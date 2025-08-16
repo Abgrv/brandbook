@@ -36,6 +36,7 @@ class Brandbook(Base):
     user = relationship("User", back_populates="brandbooks")
     sections = relationship("Section", back_populates="brandbook", cascade="all, delete")
     files = relationship("UploadedFile", back_populates="brandbook", cascade="all, delete")
+    items = relationship("BrandItem", back_populates="brandbook", cascade="all, delete-orphan")
 
 
 class Section(Base):

@@ -1,6 +1,6 @@
 # app/users/routes.py
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
 from jose import jwt
@@ -52,7 +52,7 @@ def register_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
         first_name=user.first_name,
         last_name=user.last_name,
         email=user.email,
-        hashed_password=hashed_password
+        password_hash=hashed_password
     )
     db.add(db_user)
     db.commit()
@@ -65,8 +65,9 @@ def register_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 @router.post("/login", response_model=schemas.Token)
 def login(user: schemas.UserLogin, db: Session = Depends(get_db)):
     db_user = db.query(models.User).filter(models.User.email == user.email).first()
-    if not db_user or not verify_password(user.password, db_user.hashed_password):
+    if not db_user or not verify_password(user.password, db_user.password_hash):
         raise HTTPException(status_code=401, detail="Неверный email или пароль")
+
 
     # Генерация токена
     access_token = create_access_token(

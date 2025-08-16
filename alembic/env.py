@@ -9,7 +9,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 # Импортируем Base из твоих моделей
 from backend.users.models import Base  
-
+from backend.brandbook import models as brandbook_models
 # Это конфиг Alembic
 config = context.config
 
