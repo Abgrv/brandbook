@@ -3,6 +3,7 @@
 from pydantic import BaseModel, EmailStr
 from typing import Annotated
 from pydantic import StringConstraints
+import uuid
 
 
 # 📌 Схема для создания пользователя (при регистрации)
@@ -19,7 +20,7 @@ class UserCreate(BaseModel):
 
 # 📌 Схема для отображения информации о пользователе (без пароля)
 class UserResponse(BaseModel):
-    id: int
+    id: uuid.UUID
     first_name: str
     last_name: str
     email: EmailStr
