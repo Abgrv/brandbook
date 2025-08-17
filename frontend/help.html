@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Brandbook Help</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="font-sans text-gray-800">
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside class="w-1/4 bg-gray-50 p-6 hidden md:block">
+            <div class="mb-10 flex items-center space-x-3">
+                <div class="w-12 h-12 rounded-full bg-gray-300"></div>
+                <!-- Clickable logo returning to home page -->
+                <a href="/frontend/index.html" class="font-bold text-lg hover:underline">WEB®BRAND</a>
+            </div>
+            <nav class="space-y-4 mt-4">
+                <a href="/frontend/index.html" class="block py-2 px-3 rounded hover:bg-gray-200">About Us</a>
+                <a href="/frontend/projects.html" class="block py-2 px-3 rounded hover:bg-gray-200">Projects</a>
+                <a href="/frontend/community.html" class="block py-2 px-3 rounded hover:bg-gray-200">Community</a>
+                <a href="#" class="block py-2 px-3 rounded bg-gray-200">Help</a>
+            </nav>
+        </aside>
+
+        <!-- Main content -->
+        <main class="flex-1 p-8 relative">
+            <!-- Top right controls -->
+            <div class="flex justify-end space-x-4 mb-6">
+                <button class="py-2 px-4 bg-black text-white rounded-full text-sm hover:bg-gray-800">+ New Brandbook</button>
+                <button id="login-btn" class="py-2 px-4 border border-gray-300 rounded-full text-sm hover:bg-gray-100">Log in</button>
+            </div>
+
+            <!-- Help content -->
+            <h1 class="text-3xl font-bold mb-4">Help</h1>
+            <p class="mb-4 text-gray-700">
+                We're always here to help! If you have any questions, issues, or feedback, please contact our support team using any of the methods below.
+            </p>
+            <ul class="list-disc ml-6 mb-4 text-gray-700 space-y-1">
+                <li>Email: support@yoursite.com</li>
+                <li>Phone: +X (XXX) XXX-XX-XX (Mon–Fri, 9&nbsp;AM–6&nbsp;PM)</li>
+                <li>Live Chat: Available in the bottom-right corner of the website</li>
+                <li>Social Media: Facebook, Telegram, VK</li>
+            </ul>
+            <p class="mb-4 text-gray-700">
+                Frequently Asked Questions (FAQ) – before reaching out, check our FAQ section — your question might already be answered there.
+            </p>
+            <p class="mb-4 text-gray-700">
+                Response Time:
+                <br>• We strive to reply as quickly as possible;
+                <br>• Email — within 24 hours on business days;
+                <br>• Live Chat — under 15 minutes during working hours;
+                <br>• Social Media — 1–2 hours.
+            </p>
+            <p class="mb-6 text-gray-700">
+                Thank you for choosing us! We appreciate your trust and will do our best to resolve your request promptly and efficiently. For urgent inquiries, we recommend calling or using the live chat.
+            </p>
+            <button class="py-2 px-4 bg-black text-white rounded-full hover:bg-gray-800">Chat</button>
+
+        </main>
+    </div>
+
+    <!-- Login Modal (copied from index for consistency) -->
+    <div id="login-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+        <div class="relative bg-white w-96 p-6 rounded-lg shadow-lg">
+            <button id="close-login" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-2xl">×</button>
+            <h3 class="text-center text-xl font-semibold mb-4">Log in or create an account</h3>
+            <button class="flex items-center justify-center w-full border border-gray-300 py-2 px-4 rounded-md mb-4 bg-red-500 text-white hover:bg-red-600">
+                <i class="fab fa-google mr-2"></i> Sign in with Google
+            </button>
+            <input type="email" placeholder="Email" class="w-full border border-gray-300 py-2 px-3 rounded-md mb-3" />
+            <input type="password" placeholder="Password" class="w-full border border-gray-300 py-2 px-3 rounded-md mb-3" />
+            <button class="w-full bg-black text-white py-2 rounded-md mb-2 hover:bg-gray-800">Log in</button>
+            <p class="text-center text-sm mb-1">No account? <a href="#" class="text-blue-600 underline">Create one</a></p>
+            <p class="text-center text-sm"><a href="#" class="text-blue-600 underline">Reset password</a></p>
+        </div>
+    </div>
+
+    <script src="scripts.js"></script>
+</body>
+</html>
