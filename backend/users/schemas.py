@@ -1,6 +1,6 @@
 # app/users/schemas.py
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, ConfigDict
 from typing import Annotated
 from pydantic import StringConstraints
 import uuid
@@ -25,8 +25,7 @@ class UserResponse(BaseModel):
     last_name: str
     email: EmailStr
 
-    class Config:
-        from_attributes = True  # Позволяет работать напрямую с SQLAlchemy объектами
+    model_config = ConfigDict(from_attributes=True)  # Позволяет работать напрямую с SQLAlchemy объектами
 
 
 # 📌 Параметры для авторизации пользователя

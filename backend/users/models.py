@@ -1,8 +1,10 @@
 import uuid
-from sqlalchemy import Column, String, DateTime, ForeignKey, Integer, JSON
+from sqlalchemy import Column, String, DateTime, ForeignKey, Integer, JSON, UniqueConstraint
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import declarative_base, relationship
 from datetime import datetime
+import uuid
+from sqlalchemy.orm import declarative_base, relationship
 
 Base = declarative_base()
 
@@ -17,10 +19,17 @@ class User(Base):
     first_name = Column(String, nullable=False)
     last_name = Column(String, nullable=False)
     email = Column(String, unique=True, nullable=False)
-    password_hash = Column(String, nullable=False)
+    password_hash = Column(String, nullable=True)  # <-- стало nullable
+    provider = Column(String, nullable=True)       # 'google' и т.п.
+    provider_id = Column(String, unique=True, nullable=True)  # Google sub
+    avatar_url = Column(String, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
 
     brandbooks = relationship("Brandbook", back_populates="user")
+
+    __table_args__ = (
+        UniqueConstraint('provider', 'provider_id', name='uq_provider_providerid'),
+    )
 
 
 class Brandbook(Base):

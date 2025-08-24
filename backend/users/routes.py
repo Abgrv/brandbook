@@ -8,6 +8,8 @@ from datetime import datetime, timedelta
 
 from database import get_db
 from backend.users import models, schemas, dependencies
+from backend.auth.deps import current_user
+from backend.users.models import User
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
@@ -78,11 +80,6 @@ def login(user: schemas.UserLogin, db: Session = Depends(get_db)):
 
 
 #Защищённый маршрут
-@router.get("/me", response_model=schemas.UserResponse)
-def read_users_me(current_user: models.User = Depends(dependencies.get_current_user)):
-    """
-    Возвращает данные текущего авторизованного пользователя.
-    Работает только при передаче правильного токена в заголовке:
-    Authorization: Bearer <token>
-    """
-    return current_user
+@router.get("/me")
+def me(user: User = Depends(current_user)):
+    return {"id": str(user.id), "email": user.email, "name": f"{user.first_name} {user.last_name}"}

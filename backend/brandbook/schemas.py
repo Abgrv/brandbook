@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from typing import List, Optional
 
 
@@ -18,8 +18,7 @@ class BrandItemCreate(BrandItemBase):
 class BrandItemRead(BrandItemBase):
     id: int
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class BrandBookBase(BaseModel):
@@ -35,5 +34,4 @@ class BrandBookRead(BrandBookBase):
     id: int
     items: List[BrandItemRead] = []
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
