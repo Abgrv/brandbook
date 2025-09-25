@@ -26,6 +26,6 @@ app.add_middleware(
 
 @app.get('/', response_class=FileResponse)
 async def read_home():
-    return 'frontend/index.html'
+    return FileResponse('frontend/index.html')
 
 

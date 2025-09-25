@@ -9,7 +9,9 @@ load_dotenv()
 # --- Google OAuth ---
 GOOGLE_CLIENT_ID: str | None = os.getenv("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET: str | None = os.getenv("GOOGLE_CLIENT_SECRET")
-OAUTH_REDIRECT_URI: str = os.getenv("OAUTH_REDIRECT_URI", "http://127.0.0.1:8000/auth/google/callback")
+# OAUTH_REDIRECT_URI: str = os.getenv("OAUTH_REDIRECT_URI", "http://127.0.0.1:8000/auth/google/callback")
+# По умолчанию пусть редирект вычисляется автоматически из входящего запроса
+OAUTH_REDIRECT_URI: str | None = os.getenv("OAUTH_REDIRECT_URI") or "auto"
 
 # --- JWT ---
 JWT_SECRET: str = os.getenv("JWT_SECRET", "dev_secret_change_me")
