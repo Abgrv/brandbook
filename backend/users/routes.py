@@ -99,7 +99,9 @@ def login(
 #Защищённый маршрут
 @router.get("/me")
 def me(user: User = Depends(current_user)):
-    return {"id": str(user.id), "email": user.email, "name": f"{user.first_name} {user.last_name}"}
+    return {"id": str(user.id), "email": user.email,
+            "name": f"{user.first_name} {user.last_name}", "avatar_url": user.avatar_url}
+
 
 
 # logout — очистка cookie

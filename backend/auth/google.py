@@ -1,7 +1,7 @@
 # backend/auth/google.py
 from __future__ import annotations
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -11,7 +11,6 @@ from sqlalchemy.orm import Session
 from starlette.requests import Request
 from authlib.integrations.starlette_client import OAuth
 from authlib.integrations.base_client.errors import OAuthError
-from urllib.parse import urlencode
 
 from config import (
     GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, OAUTH_REDIRECT_URI,
@@ -95,11 +94,11 @@ async def _authorize_google_token(request: Request, **kwargs) -> tuple[dict, Opt
 #     return OAUTH_REDIRECT_URI
 
 def issue_jwt(user_id) -> str:
-    now = datetime.utcnow()
+    now = datetime.now(tz=timezone.utc)  # всегда UTC
     payload = {
         "sub": str(user_id),
-        "iat": int(now.timestamp()),
-        "exp": int((now + timedelta(minutes=JWT_EXPIRES_MIN)).timestamp()),
+        "iat": now,
+        "exp": now + timedelta(minutes=JWT_EXPIRES_MIN),
     }
     return jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALG)
 
@@ -108,7 +107,8 @@ async def google_login(request: Request):
     """Редирект на Google для логина/регистрации."""
     if not GOOGLE_CLIENT_ID or not GOOGLE_CLIENT_SECRET:
         raise HTTPException(500, "Google OAuth is not configured")
-    return await oauth.google.authorize_redirect(request, OAUTH_REDIRECT_URI)
+    redirect_uri = request.url_for("google_callback")   # нужна метка name= у callback
+    return await oauth.google.authorize_redirect(request, redirect_uri)
     # redirect_uri = _resolve_redirect_uri(request)
     # return await oauth.google.authorize_redirect(request, redirect_uri)
 

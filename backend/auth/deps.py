@@ -51,7 +51,10 @@ def current_user(request: Request, db: Session = Depends(get_db)) -> User:
     key = _parse_sub(sub)
 
     # SQLAlchemy 1.4: Session.get; на 2.x используйте db.get(User, key)
-    user = db.query(User).get(key)
+    # SQLAlchemy 1.4+: Session.get гарантированно работает и с UUID первичными ключами.
+    # Query.get помечен как legacy и не всегда корректно отрабатывает для UUID, поэтому
+    # используем современный API, чтобы не терять пользователя и не выбрасывать 401.
+    user = db.get(User, key)
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found")
 

@@ -1,46 +1,41 @@
-# app/users/dependencies.py
-
-from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
+# backend/auth/deps.py
+from fastapi import Depends, HTTPException, Request, status
 from jose import jwt, JWTError
 from sqlalchemy.orm import Session
-
 from database import get_db
-from backend.users import models
+from config import JWT_SECRET, JWT_ALG
+from backend.users.models import User
+from uuid import UUID
 
-# 📌 Настройки для JWT
-SECRET_KEY = "supersecret"  # ⚠ хранить в .env
-ALGORITHM = "HS256"
+COOKIE_NAME = "access_token"
 
-# 📌 Указываем FastAPI, что токен будет передаваться в формате Bearer
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/users/login")
+def _extract_token(request: Request):
+    t = request.cookies.get(COOKIE_NAME)
+    if t: return t
+    a = request.headers.get("authorization") or request.headers.get("Authorization")
+    if a and a.lower().startswith("bearer "): return a.split(" ",1)[1].strip()
+    return None
 
+def _parse_sub(sub: str):
+    try: return int(sub)
+    except: pass
+    try: return UUID(sub)
+    except: pass
+    return sub
 
-# 🆕 NEW CODE — Получение текущего пользователя из токена
-def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
-    """
-    Декодирует JWT-токен, извлекает ID пользователя,
-    находит его в базе и возвращает объект пользователя.
-    Если токен некорректен или пользователь не найден — ошибка 401.
-    """
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Не удалось авторизовать пользователя",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
-
+def current_user(request: Request, db: Session = Depends(get_db)) -> User:
+    token = _extract_token(request)
+    if not token:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
     try:
-        # Декодируем токен
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        user_id: str = payload.get("sub")
-        if user_id is None:
-            raise credentials_exception
+        payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALG])
     except JWTError:
-        raise credentials_exception
-
-    # Ищем пользователя в БД
-    user = db.query(models.User).filter(models.User.id == int(user_id)).first()
-    if user is None:
-        raise credentials_exception
-
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid or expired token")
+    sub = payload.get("sub")
+    if not sub:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token payload")
+    key = _parse_sub(str(sub))
+    user = db.query(User).get(key)  # (на SA2.x: db.get(User, key))
+    if not user:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found")
     return user

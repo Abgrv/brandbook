@@ -28,4 +28,27 @@ app.add_middleware(
 async def read_home():
     return FileResponse('frontend/index.html')
 
+from fastapi import Request, APIRouter
+from jose import jwt as jose_jwt, JWTError
+from config import JWT_SECRET, JWT_ALG
+
+debug = APIRouter()
+
+@debug.get("/debug/whoami")
+def whoami(req: Request):
+    return {"cookies": dict(req.cookies)}
+
+@debug.get("/debug/token")
+def debug_token(req: Request):
+    tok = req.cookies.get("access_token")
+    if not tok:
+        return {"has_cookie": False}
+    try:
+        payload = jose_jwt.decode(tok, JWT_SECRET, algorithms=[JWT_ALG])
+        return {"has_cookie": True, "payload": payload}
+    except JWTError as e:
+        return {"has_cookie": True, "decode_error": str(e)}
+
+app.include_router(debug)
+
 
