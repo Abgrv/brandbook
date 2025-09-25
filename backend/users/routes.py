@@ -1,6 +1,6 @@
 # app/users/routes.py
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Response
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
 from jose import jwt
@@ -76,6 +76,15 @@ def login(user: schemas.UserLogin, db: Session = Depends(get_db)):
         data={"sub": str(db_user.id)},
         expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     )
+
+    # кладём токен в HttpOnly cookie
+    response.set_cookie(
+        key="access_token",
+        value=access_token,
+        httponly=True,
+        samesite="lax",
+        secure=False  # ⚠️ в проде лучше True (https)
+    )
     return {"access_token": access_token, "token_type": "bearer"}
 
 
@@ -83,3 +92,12 @@ def login(user: schemas.UserLogin, db: Session = Depends(get_db)):
 @router.get("/me")
 def me(user: User = Depends(current_user)):
     return {"id": str(user.id), "email": user.email, "name": f"{user.first_name} {user.last_name}"}
+
+
+# logout — очистка cookie
+@router.post("/logout")
+def logout(response: Response):
+    response.delete_cookie("access_token")
+    return {"message": "Logged out"}
+
+

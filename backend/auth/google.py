@@ -47,7 +47,7 @@ async def google_login(request: Request):
         raise HTTPException(500, "Google OAuth is not configured")
     return await oauth.google.authorize_redirect(request, OAUTH_REDIRECT_URI)
 
-@router.get("/callback")
+@router.get("/callback", name="google_callback")
 async def google_callback(request: Request, db: Session = Depends(get_db)):
     """Принимаем ответ от Google, создаём/находим пользователя, ставим cookie с JWT."""
     try:
