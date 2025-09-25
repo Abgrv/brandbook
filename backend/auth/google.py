@@ -10,6 +10,7 @@ from jose import jwt
 from sqlalchemy.orm import Session
 from starlette.requests import Request
 from authlib.integrations.starlette_client import OAuth
+from authlib.integrations.base_client.errors import OAuthError
 from urllib.parse import urlencode
 
 from config import (
@@ -34,13 +35,61 @@ oauth.register(
         "timeout": 10.0},
 )
 
-def _resolve_redirect_uri(request: Request) -> str:
-    """Return redirect URI configured explicitly or build it from the current request."""
+async def _authorize_google_token(request: Request, **kwargs) -> dict:
+    """Обёртка вокруг authorize_access_token без дублирования redirect_uri."""
+    app = oauth.google
+    if request.scope.get("method", "GET") == "GET":
+        error = request.query_params.get("error")
+        if error:
+            description = request.query_params.get("error_description")
+            raise OAuthError(error=error, description=description)
+        params = {
+            "code": request.query_params.get("code"),
+            "state": request.query_params.get("state"),
+        }
+    else:
+        form = await request.form()
+        params = {
+            "code": form.get("code"),
+            "state": form.get("state"),
+        }
 
-    if not OAUTH_REDIRECT_URI or OAUTH_REDIRECT_URI.lower() == "auto":
-        # request.url_for уже вернёт абсолютный URL c текущим хостом/портом
-        return str(request.url_for("google_callback"))
-    return OAUTH_REDIRECT_URI
+    session = None if app.framework.cache else request.session
+    state = params.get("state")
+    state_data = await app.framework.get_state_data(session, state)
+    await app.framework.clear_state_data(session, state)
+    params = app._format_state_params(state_data, params)
+
+    claims_options = kwargs.pop("claims_options", None)
+    claims_cls = kwargs.pop("claims_cls", None)
+    leeway = kwargs.pop("leeway", 120)
+
+    redirect_uri = params.pop("redirect_uri", None)
+    token = await app.fetch_access_token(
+        redirect_uri=redirect_uri,
+        **params,
+        **kwargs,
+    )
+
+    if "id_token" in token and state_data and "nonce" in state_data:
+        userinfo = await app.parse_id_token(
+            token,
+            nonce=state_data["nonce"],
+            claims_options=claims_options,
+            claims_cls=claims_cls,
+            leeway=leeway,
+        )
+        token["userinfo"] = userinfo
+    return token
+
+
+# def _resolve_redirect_uri(request: Request) -> str:
+#     """Return redirect URI configured explicitly or build it from the current request."""
+
+#     if not OAUTH_REDIRECT_URI or OAUTH_REDIRECT_URI.lower() == "auto":
+#         # request.url_for уже вернёт абсолютный URL c текущим хостом/портом
+#         return str(request.url_for("google_callback"))
+#     return OAUTH_REDIRECT_URI
 
 def issue_jwt(user_id) -> str:
     now = datetime.utcnow()
@@ -56,8 +105,9 @@ async def google_login(request: Request):
     """Редирект на Google для логина/регистрации."""
     if not GOOGLE_CLIENT_ID or not GOOGLE_CLIENT_SECRET:
         raise HTTPException(500, "Google OAuth is not configured")
-    redirect_uri = _resolve_redirect_uri(request)
-    return await oauth.google.authorize_redirect(request, redirect_uri)
+    return await oauth.google.authorize_redirect(request, OAUTH_REDIRECT_URI)
+    # redirect_uri = _resolve_redirect_uri(request)
+    # return await oauth.google.authorize_redirect(request, redirect_uri)
 
 @router.get("/callback", name="google_callback")
 async def google_callback(request: Request, db: Session = Depends(get_db)):
@@ -82,12 +132,14 @@ async def google_callback(request: Request, db: Session = Depends(get_db)):
     else:
         final_redirect = None
     try:
-        redirect_uri = _resolve_redirect_uri(request)
-        token = await oauth.google.authorize_access_token(request, redirect_uri=redirect_uri)
+        token = await _authorize_google_token(request)
         userinfo: Optional[dict] = token.get("userinfo")
         if not userinfo:
             # иногда нужно явно распарсить id_token
             userinfo = await oauth.google.parse_id_token(request, token)
+    except OAuthError as e:
+        detail = e.description or e.error
+        raise HTTPException(400, f"Google auth failed: {detail}")
     except Exception as e:
         raise HTTPException(400, f"Google auth failed: {e}")
 
@@ -140,6 +192,10 @@ async def google_callback(request: Request, db: Session = Depends(get_db)):
 
     # 4) выдаём JWT -> кладём в httpOnly cookie
     token_jwt = issue_jwt(user.id)
+    if final_redirect and not final_redirect.startswith("/"):
+        final_redirect = None
+
+    redirect_target = final_redirect or "/frontend/index.html"
     if final_redirect and not final_redirect.startswith("/"):
         final_redirect = None
 
