@@ -7,9 +7,10 @@ from jose import jwt
 from datetime import datetime, timedelta
 
 from database import get_db
-from backend.users import models, schemas, dependencies
+from backend.users import models, schemas
 from backend.auth.deps import current_user
 from backend.users.models import User
+from config import JWT_SECRET, JWT_ALG, JWT_EXPIRES_MIN
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
@@ -17,9 +18,12 @@ router = APIRouter(prefix="/users", tags=["Users"])
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # 📌 Настройки JWT
-SECRET_KEY = "supersecret"  # в реальном проекте — хранить в .env
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 60
+# SECRET_KEY = "supersecret"  # в реальном проекте — хранить в .env
+# ALGORITHM = "HS256"
+# ACCESS_TOKEN_EXPIRE_MINUTES = 60
+SECRET_KEY = JWT_SECRET
+ALGORITHM = JWT_ALG
+ACCESS_TOKEN_EXPIRE_MINUTES = JWT_EXPIRES_MIN
 
 
 # 🔹 Хэширование пароля
@@ -65,7 +69,11 @@ def register_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 
 # 📌 Логин пользователя
 @router.post("/login", response_model=schemas.Token)
-def login(user: schemas.UserLogin, db: Session = Depends(get_db)):
+def login(
+    user: schemas.UserLogin,
+    response: Response,
+    db: Session = Depends(get_db),
+):
     db_user = db.query(models.User).filter(models.User.email == user.email).first()
     if not db_user or not verify_password(user.password, db_user.password_hash):
         raise HTTPException(status_code=401, detail="Неверный email или пароль")
