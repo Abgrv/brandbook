@@ -115,10 +115,24 @@ async def google_login(request: Request):
 @router.get("/callback", name="google_callback")
 async def google_callback(request: Request, db: Session = Depends(get_db)):
     """Принимаем ответ от Google, создаём/находим пользователя, ставим cookie с JWT."""
+     # redirect_uri может приходить из query params или быть сохранён в state Authlib.
     final_redirect: Optional[str] = request.query_params.get("redirect_uri")
+    state_data: Optional[dict] = None
+
+    # Захватываем state из сессии до authorize_access_token, чтобы после очистки state
+    # можно было достать сохранённый redirect.
+    if request.scope.get("method", "GET") == "GET":
+        state = request.query_params.get("state")
+    else:
+        form = await request.form()
+        state = form.get("state")
+
+    session = None if oauth.google.framework.cache else request.session
+    if state:
+        state_data = await oauth.google.framework.get_state_data(session, state)
+
     try:
         token = await oauth.google.authorize_access_token(request)
-        token, state_data = await _authorize_google_token(request)
         if not final_redirect and state_data:
             final_redirect = state_data.get("redirect_uri")
         userinfo: Optional[dict] = token.get("userinfo")
