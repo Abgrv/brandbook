@@ -35,8 +35,12 @@ oauth.register(
         "timeout": 10.0},
 )
 
-async def _authorize_google_token(request: Request, **kwargs) -> dict:
-    """Обёртка вокруг authorize_access_token без дублирования redirect_uri."""
+async def _authorize_google_token(request: Request, **kwargs) -> tuple[dict, Optional[dict]]:
+    """Обёртка вокруг authorize_access_token без дублирования redirect_uri.
+
+    Возвращает пару (token, state_data), чтобы можно было достать redirect_uri,
+    сохранённый Authlib во время authorize_redirect.
+    """
     app = oauth.google
     if request.scope.get("method", "GET") == "GET":
         error = request.query_params.get("error")
@@ -80,8 +84,7 @@ async def _authorize_google_token(request: Request, **kwargs) -> dict:
             leeway=leeway,
         )
         token["userinfo"] = userinfo
-    return token
-
+    return token, state_data
 
 # def _resolve_redirect_uri(request: Request) -> str:
 #     """Return redirect URI configured explicitly or build it from the current request."""
@@ -112,27 +115,12 @@ async def google_login(request: Request):
 @router.get("/callback", name="google_callback")
 async def google_callback(request: Request, db: Session = Depends(get_db)):
     """Принимаем ответ от Google, создаём/находим пользователя, ставим cookie с JWT."""
-    # Authlib 1.3 начал пробрасывать redirect_uri в fetch_access_token из query params,
-    # из-за чего при наличии redirect_uri в запросе получаем TypeError (дублирование kwargs).
-    # Если фронтенд передал redirect_uri (куда отправить пользователя после логина),
-    # сохраняем его и создаём новый Request без этого параметра для oauth.google.
-    query_items = list(request.query_params.multi_items())
-    final_redirect: Optional[str] = None
-    filtered_items = []
-    for key, value in query_items:
-        if key == "redirect_uri" and value:
-            final_redirect = value
-            continue
-        filtered_items.append((key, value))
-
-    if len(filtered_items) != len(query_items):
-        scope = dict(request.scope)
-        scope["query_string"] = urlencode(filtered_items, doseq=True).encode()
-        request = Request(scope, receive=request.receive)
-    else:
-        final_redirect = None
+    final_redirect: Optional[str] = request.query_params.get("redirect_uri")
     try:
-        token = await _authorize_google_token(request)
+        token = await oauth.google.authorize_access_token(request)
+        token, state_data = await _authorize_google_token(request)
+        if not final_redirect and state_data:
+            final_redirect = state_data.get("redirect_uri")
         userinfo: Optional[dict] = token.get("userinfo")
         if not userinfo:
             # иногда нужно явно распарсить id_token
@@ -192,10 +180,6 @@ async def google_callback(request: Request, db: Session = Depends(get_db)):
 
     # 4) выдаём JWT -> кладём в httpOnly cookie
     token_jwt = issue_jwt(user.id)
-    if final_redirect and not final_redirect.startswith("/"):
-        final_redirect = None
-
-    redirect_target = final_redirect or "/frontend/index.html"
     if final_redirect and not final_redirect.startswith("/"):
         final_redirect = None
 
