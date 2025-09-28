@@ -1,13 +1,13 @@
-<!DOCTYPE html><html lang="en"><head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
   <meta charset='UTF-8'/>
   <meta name='viewport' content='width=device-width, initial-scale=1.0'/>
   <script src='https://cdn.tailwindcss.com'></script>
+  <title>Brandbook Home</title>
   <style>
     .pill{padding:.5rem 1rem;border:1px solid #ddd;border-radius:9999px;background:#fff}
-    .google-btn{display:inline-flex;align-items:center;gap:10px;border:1px solid #dadce0;border-radius:9999px;background:#fff;padding:.5rem 1rem}
-    .google-icon{width:18px;height:18px;display:block}
   </style>
-  <title>Brandbook Home</title>
 </head>
 <body class="font-sans text-gray-900">
 <div class="flex min-h-screen">
@@ -21,64 +21,77 @@
       </a>
     </div>
     <nav class="px-6 space-y-2 mt-4">
-      <a class="block rounded px-3 py-2 hover:bg-gray-100" href="/frontend/about.html">About US</a>
+      <a class="block rounded px-3 py-2 hover:bg-gray-100" href="/frontend/about.html">About us</a>
       <a class="block rounded px-3 py-2 hover:bg-gray-100" href="/frontend/projects.html">Projects</a>
       <a class="block rounded px-3 py-2 hover:bg-gray-100" href="/frontend/community.html">Community</a>
       <a class="block rounded px-3 py-2 hover:bg-gray-100" href="/frontend/help.html">Help</a>
     </nav>
   </aside>
 
-  <!-- Main column -->
+  <!-- Main -->
   <main class="flex-1">
-    <!-- Top buttons -->
-    <div class="flex justify-end gap-3 p-4">
-      <a href="/frontend/create-brandbook.html" class="pill bg-black text-white hover:bg-gray-900 text-sm">+ New Brandbook</a>
-      <button id="login-btn-top" class="pill text-sm">Log in</button>
-    </div>
+
+    <!-- Top bar -->
+    <header class="flex items-center justify-between p-4">
+      <div></div>
+      <div class="flex items-center gap-3">
+        <a href="/frontend/create-brandbook.html" class="pill bg-black text-white hover:bg-gray-900 text-sm">+ New Brandbook</a>
+
+        <!-- When NOT authenticated -->
+        <button id="login-btn-top" class="pill text-sm">Log in</button>
+
+        <!-- When authenticated -->
+        <div id="user-menu" class="relative hidden">
+          <button id="avatar-btn" class="w-9 h-9 rounded-full overflow-hidden ring-1 ring-gray-300 flex items-center justify-center text-white text-sm select-none"></button>
+          <div id="menu-panel" class="absolute right-0 mt-2 w-48 rounded-xl border border-gray-200 bg-white shadow-lg py-2 hidden">
+            <div class="px-3 py-2 text-xs text-gray-500" id="menu-name"></div>
+            <a href="/frontend/projects.html" class="block px-3 py-2 text-sm hover:bg-gray-50">Projects</a>
+            <a href="/frontend/account.html" class="block px-3 py-2 text-sm hover:bg-gray-50">Profile</a>
+            <button id="logout-btn" class="w-full text-left px-3 py-2 text-sm hover:bg-gray-50">Logout</button>
+          </div>
+        </div>
+      </div>
+    </header>
 
     <!-- Content -->
     <div class="mx-auto w-full max-w-[820px] px-4 pb-16">
       <!-- WE BRAND logo -->
-      <div class="select-none leading-none mt-1 mb-4">
+      <div class="select-none leading-none mt-1 mb-3">
         <div class="text-[140px] font-black tracking-tight">WE</div>
         <div class="text-[140px] font-black tracking-tight">BRAND</div>
       </div>
 
-      <!-- Google + Login pills + User info (hidden by default) -->
-      <div class="flex items-center gap-3 mb-6">
-        <!-- активная ссылка на OAuth -->
-        <a href="/auth/google/login" class="google-btn text-sm" id="google-oauth-link">
-          <span class="google-icon" aria-hidden="true">
-            <svg viewBox="0 0 48 48" width="18" height="18" xmlns="http://www.w3.org/2000/svg">
-              <path fill="#EA4335" d="M24 9.5c3.54 0 6.69 1.22 9.18 3.6l6.85-6.85C35.9 2.94 30.47 1 24 1 14.64 1 6.44 6.99 2.56 15.17l7.98 6.19C12.15 16.09 17.66 9.5 24 9.5z"/>
-              <path fill="#4285F4" d="M46.5 24c0-1.54-.14-3.02-.39-4.44H24v8.48h12.65c-.54 2.9-2.19 5.35-4.66 6.99l7.5 5.82C43.89 36.68 46.5 30.79 46.5 24z"/>
-              <path fill="#FBBC05" d="M10.54 28.36A14.5 14.5 0 0 1 9.5 24c0-1.51.26-2.97.74-4.32l-7.98-6.19C.85 16.45 0 20.12 0 24c0 3.91.85 7.61 2.36 10.94l8.18-6.58z"/>
-              <path fill="#34A853" d="M24 48c6.48 0 11.94-2.14 15.92-5.82l-7.5-5.82c-2.1 1.41-4.77 2.24-8.42 2.24-6.34 0-11.85-6.59-13.46-15.86l-8.18 6.58C6.44 41.01 14.64 48 24 48z"/>
+      <!-- UNDER-HEAD AUTH (visible only when not logged in) -->
+      <div id="underhead-auth" class="flex items-center gap-3 mb-6">
+        <!-- Google button -->
+        <a href="/auth/google/login"
+           class="inline-flex items-center gap-3 rounded-full border border-gray-300 bg-white pl-0 pr-4 h-10">
+          <!-- Google icon -->
+          <span aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="18" height="18">
+              <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.3 6.1 29.4 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.5-.4-3.5z"/>
+              <path fill="#FF3D00" d="M6.3 14.7L12.9 19.5C14.7 15.3 18.9 12 24 12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.3 6.1 29.4 4 24 4 16.7 4 10.4 8.1 6.3 14.7z"/>
+              <path fill="#4CAF50" d="M24 44c5.2 0 10.1-2 13.7-5.3L31.7 33C29.7 34.3 27 35 24 35c-5.2 0-9.6-3.3-11.3-8.1l-6.6 4.8C10.4 39.9 16.7 44 24 44z"/>
+              <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-1.8 4.8-6.1 8.1-11.3 8.1v8c7.3 0 13.6-4.7 16-11.3 1-2.5 1.6-5.2 1.6-8.3 0-1.3-.1-2.5-.4-3.5z"/>
             </svg>
           </span>
-          <span>Sign in with Google</span>
+          <span class="text-sm">Sign in with Google</span>
         </a>
-        <button id="login-btn" class="pill text-sm">Log in</button>
 
-        <!-- Блок с пользователем (будет показан после /users/me) -->
-        <div id="user-info" class="hidden items-center gap-2">
-          <img id="user-avatar" class="w-8 h-8 rounded-full object-cover" alt="avatar">
-          <span id="user-name" class="text-sm"></span>
-          <button id="logout-btn"
-                  class="py-2 px-4 border border-gray-300 rounded-full text-sm hover:bg-gray-100">
-            Logout
-          </button>
-        </div>
+        <!-- Plain login opens modal -->
+        <button id="login-btn" class="py-2 px-4 border border-gray-300 rounded-full text-sm bg-white hover:bg-gray-50">
+          Log in
+        </button>
       </div>
 
-      <!-- Title + intro paragraph -->
+      <!-- Title + intro -->
       <h2 class="text-xl font-semibold mb-2">Your Smart Branding Solution!</h2>
       <p class="text-sm text-gray-700 mb-4">
         At [BrandBook Online], we help businesses, startups, and creators build consistent, powerful brands effortlessly.
         Our intuitive online tool guides you step by step—from logo usage and color palettes to typography and brand voice.
       </p>
 
-      <!-- Big gray hero placeholder -->
+      <!-- Big gray hero -->
       <div class="h-64 w-full bg-gray-200 rounded-xl mb-6"></div>
 
       <!-- Why Choose Us -->
@@ -90,7 +103,7 @@
         <div>✅ <b>Team Collaboration</b> – Invite members to contribute and keep branding consistent.</div>
       </div>
 
-      <!-- Medium gray illustration -->
+      <!-- Mid illustration -->
       <div class="h-48 w-full bg-gray-200 rounded-xl mb-4"></div>
 
       <!-- Text -->
@@ -122,30 +135,52 @@
           </div>
         </div>
       </div>
-
     </div>
 
-    <!-- Login Modal -->
+    <!-- Modal (styled as your mock) -->
     <div id="login-modal" class="fixed inset-0 bg-black/50 flex items-center justify-center hidden">
-      <div class="relative bg-white w-96 p-6 rounded-lg shadow-lg">
-        <button id="close-login" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-2xl">×</button>
-        <h3 class="text-center text-xl font-semibold mb-4">Log in or create an account</h3>
-        <a href="/auth/google/login" class="google-btn w-full justify-center">
-          <span class="google-icon" aria-hidden="true">
-            <svg viewBox="0 0 48 48" width="18" height="18" xmlns="http://www.w3.org/2000/svg">
-              <path fill="#EA4335" d="M24 9.5c3.54 0 6.69 1.22 9.18 3.6l6.85-6.85C35.9 2.94 30.47 1 24 1 14.64 1 6.44 6.99 2.56 15.17l7.98 6.19C12.15 16.09 17.66 9.5 24 9.5z"/>
-              <path fill="#4285F4" d="M46.5 24c0-1.54-.14-3.02-.39-4.44H24v8.48h12.65c-.54 2.9-2.19 5.35-4.66 6.99l7.5 5.82C43.89 36.68 46.5 30.79 46.5 24z"/>
-              <path fill="#FBBC05" d="M10.54 28.36A14.5 14.5 0 0 1 9.5 24c0-1.51.26-2.97.74-4.32l-7.98-6.19C.85 16.45 0 20.12 0 24c0 3.91.85 7.61 2.36 10.94l8.18-6.58z"/>
-              <path fill="#34A853" d="M24 48c6.48 0 11.94-2.14 15.92-5.82l-7.5-5.82c-2.1 1.41-4.77 2.24-8.42 2.24-6.34 0-11.85-6.59-13.46-15.86l-8.18 6.58C6.44 41.01 14.64 48 24 48z"/>
+      <div class="relative bg-white w-[640px] max-w-[92vw] p-10 rounded-[36px] shadow-2xl">
+        <button id="close-login" class="absolute top-5 right-6 text-3xl leading-none">&times;</button>
+
+        <h3 class="text-center text-[34px] font-extrabold leading-tight mb-8">
+          Log in or create<br/>an account
+        </h3>
+
+        <!-- Big Google button -->
+        <a href="/auth/google/login"
+           class="group flex items-center w-full h-14 rounded-[999px] border border-gray-300 overflow-hidden mb-8">
+          <span class="h-full w-1/2 bg-[#EA4335]"></span>
+          <span class="ml-auto mr-5">
+            <svg viewBox="0 0 48 48" width="22" height="22">
+              <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.3 6.1 29.4 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.5-.4-3.5z"/>
+              <path fill="#FF3D00" d="M6.3 14.7L12.9 19.5C14.7 15.3 18.9 12 24 12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.3 6.1 29.4 4 24 4 16.7 4 10.4 8.1 6.3 14.7z"/>
+              <path fill="#4CAF50" d="M24 44c5.2 0 10.1-2 13.7-5.3L31.7 33C29.7 34.3 27 35 24 35c-5.2 0-9.6-3.3-11.3-8.1l-6.6 4.8C10.4 39.9 16.7 44 24 44z"/>
+              <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-1.8 4.8-6.1 8.1-11.3 8.1v8c7.3 0 13.6-4.7 16-11.3 1-2.5 1.6-5.2 1.6-8.3 0-1.3-.1-2.5-.4-3.5z"/>
             </svg>
           </span>
-          <span>Sign in with Google</span>
         </a>
-        <input type="email" placeholder="Email" class="w-full border border-gray-300 py-2 px-3 rounded-md mt-4 mb-3" />
-        <input type="password" placeholder="Password" class="w-full border border-gray-300 py-2 px-3 rounded-md mb-3" />
-        <button class="w-full bg-black text-white py-2 rounded-md mb-2 hover:bg-gray-800">Log in</button>
-        <p class="text-center text-sm mb-1">No account? <a href="/frontend/register.html" class="text-blue-600 underline">Create one</a></p>
-        <p class="text-center text-sm"><a href="/frontend/reset.html" class="text-blue-600 underline">Reset password</a></p>
+
+        <!-- Inputs -->
+        <div class="space-y-4 mb-6">
+          <input type="email" placeholder="e-mail"
+                 class="w-full h-14 rounded-[999px] bg-gray-100 px-5 outline-none border border-transparent focus:border-gray-300"/>
+          <input type="password" placeholder="paswort"
+                 class="w-full h-14 rounded-[999px] bg-gray-100 px-5 outline-none border border-transparent focus:border-gray-300"/>
+        </div>
+
+        <!-- Submit -->
+        <button class="w-full h-14 rounded-[999px] bg-black text-white text-lg font-semibold hover:bg-gray-900">
+          Log in
+        </button>
+
+        <!-- Footer links -->
+        <div class="text-center mt-6 text-[15px]">
+          <span>no aacount? </span>
+          <a class="text-blue-600 underline" href="/frontend/register.html">Create one</a>
+          <div class="mt-3">
+            <a class="text-blue-600 underline" href="/frontend/reset.html">Reset password</a>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -154,54 +189,66 @@
 
 <!-- Scripts -->
 <script>
-  // модалка логина
-  document.addEventListener('DOMContentLoaded', function(){
-    const modal = document.getElementById('login-modal');
-    const openers = [document.getElementById('login-btn'), document.getElementById('login-btn-top')].filter(Boolean);
-    const closeBtn = document.getElementById('close-login');
+  // helpers
+  const COLORS=["#6366F1","#EF4444","#10B981","#F59E0B","#3B82F6","#EC4899","#06B6D4","#84CC16"];
+  function colorBy(str){let h=0;for(let i=0;i<str.length;i++)h=(h*31+str.charCodeAt(i))|0;return COLORS[Math.abs(h)%COLORS.length];}
+  function initialOf(name,email){const s=(name||email||"U").trim();return s?s[0].toUpperCase():"U";}
+  function show(el){el&&el.classList.remove('hidden');}
+  function hide(el){el&&el.classList.add('hidden');}
 
-    function open(){ modal.classList.remove('hidden'); }
-    function close(){ modal.classList.add('hidden'); }
+  // header auth + under-head buttons visibility
+  async function initAuthUI(){
+    const loginBtnTop=document.getElementById('login-btn-top');
+    const userMenu=document.getElementById('user-menu');
+    const avatarBtn=document.getElementById('avatar-btn');
+    const menuPanel=document.getElementById('menu-panel');
+    const menuName=document.getElementById('menu-name');
+    const logoutBtn=document.getElementById('logout-btn');
+    const underAuth=document.getElementById('underhead-auth');
 
-    openers.forEach(btn => btn.addEventListener('click', open));
-    if(closeBtn) closeBtn.addEventListener('click', close);
-    modal?.addEventListener('click', (e)=>{ if(e.target === modal) close(); });
-  });
+    // modal
+    const modal=document.getElementById('login-modal');
+    const loginBtn=document.getElementById('login-btn');
+    const closeLogin=document.getElementById('close-login');
+    loginBtnTop?.addEventListener('click',()=>show(modal));
+    loginBtn?.addEventListener('click',()=>show(modal));
+    closeLogin?.addEventListener('click',()=>hide(modal));
+    modal?.addEventListener('click',e=>{ if(e.target===modal) hide(modal); });
 
-  // отображение пользователя по /users/me и Logout
-  async function initUserBox(){
-    const googleBtn = document.getElementById('google-oauth-link');
-    const loginBtnTop = document.getElementById('login-btn-top');
-    const loginBtn = document.getElementById('login-btn');
-    const userBox = document.getElementById('user-info');
-    const nameEl = document.getElementById('user-name');
-    const avatarEl = document.getElementById('user-avatar');
-    const logoutBtn = document.getElementById('logout-btn');
+    try{
+      const res=await fetch('/users/me',{credentials:'include'});
+      if(!res.ok) throw new Error('unauth');
+      const user=await res.json();
 
-    try {
-      const res = await fetch('/users/me', { credentials: 'include' });
-      if (!res.ok) throw new Error('unauth');
-      const user = await res.json();
+      // hide login controls, show avatar
+      hide(loginBtnTop); hide(underAuth);
+      show(userMenu);
 
-      // прячем кнопки логина
-      googleBtn?.classList.add('hidden');
-      loginBtnTop?.classList.add('hidden');
-      loginBtn?.classList.add('hidden');
+      const name=user.name||user.email||''; const email=user.email||'';
+      const init=initialOf(name,email);
+      if(user.avatar_url){
+        avatarBtn.innerHTML=`<img src="${user.avatar_url}" alt="avatar" class="w-full h-full object-cover">`;
+      }else{
+        avatarBtn.textContent=init; avatarBtn.style.background=colorBy(email||name);
+      }
 
-      // показываем блок пользователя
-      userBox?.classList.remove('hidden');
-      if (nameEl) nameEl.textContent = user.name || user.email || 'User';
-      if (avatarEl && user.avatar_url) avatarEl.src = user.avatar_url;
+      let open=false;
+      function toggle(){ open=!open; menuPanel.classList.toggle('hidden',!open); }
+      function close(){ open=false; menuPanel.classList.add('hidden'); }
+      avatarBtn.addEventListener('click',(e)=>{ e.stopPropagation(); toggle(); });
+      document.addEventListener('click',close);
+      menuName.textContent=name||email;
 
-      // logout
-      logoutBtn?.addEventListener('click', async () => {
-        await fetch('/users/logout', { method: 'POST', credentials: 'include' });
+      logoutBtn?.addEventListener('click',async()=>{
+        await fetch('/users/logout',{method:'POST',credentials:'include'});
         location.reload();
       });
-    } catch (e) {
-      // не залогинен — ничего не делаем
+
+    }catch(e){
+      // not authenticated: keep both buttons
     }
   }
-  document.addEventListener('DOMContentLoaded', initUserBox);
+  document.addEventListener('DOMContentLoaded', initAuthUI);
 </script>
-</body></html>
+</body>
+</html>

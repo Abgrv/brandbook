@@ -1,43 +1,203 @@
-<!DOCTYPE html><html lang="en"><head>
-  <meta charset='UTF-8'/>
-  <meta name='viewport' content='width=device-width, initial-scale=1.0'/>
-  <script src='https://cdn.tailwindcss.com'></script>
-  <style>
-    .google-btn{display:inline-flex;align-items:center;gap:12px;
-      padding:10px 16px;border:1px solid #dadce0;border-radius:9999px;
-      background:#fff;color:#5f6368;font-weight:500;line-height:1;
-      transition:box-shadow .15s ease, background .15s ease; text-decoration:none;}
-    .google-btn:hover{background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.08);}
-    .google-icon{width:18px;height:18px;display:block}
-  </style>
-<title>Help</title></head>
-<body class="font-sans text-gray-800">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Help — WEB®BRAND</title>
+  <style>.pill{padding:.5rem 1rem;border:1px solid #ddd;border-radius:9999px;background:#fff}</style>
+</head>
+<body class="font-sans text-gray-900">
 <div class="flex min-h-screen">
 
-    <aside class="w-1/4 bg-gray-50 p-6 hidden md:block">
-      <div class="mb-10 flex items-center space-x-3">
-        <div class="w-12 h-12 rounded-full bg-gray-300"></div>
-        <a href="/frontend/index.html" class="font-bold text-lg hover:underline">WEB®BRAND</a>
+  <!-- Sidebar -->
+  <aside class="w-64 shrink-0 hidden md:block">
+    <div class="px-6 pt-6 pb-4">
+      <a href="/frontend/index.html" class="inline-flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-full bg-gray-300"></div>
+        <span class="text-sm font-semibold">WEB®BRAND</span>
+      </a>
+    </div>
+    <nav class="px-6 space-y-2 mt-4">
+      <a class="block rounded px-3 py-2 hover:bg-gray-100" href="/frontend/about.html">About us</a>
+      <a class="block rounded px-3 py-2 hover:bg-gray-100" href="/frontend/projects.html">Projects</a>
+      <a class="block rounded px-3 py-2 hover:bg-gray-100" href="/frontend/community.html">Community</a>
+      <a class="block rounded px-3 py-2 bg-gray-100" href="/frontend/help.html">Help</a>
+    </nav>
+  </aside>
+
+  <!-- Main -->
+  <main class="flex-1">
+
+    <!-- Top bar -->
+    <header class="flex items-center justify-end p-4 gap-3">
+      <a href="/frontend/create-brandbook.html" class="pill bg-black text-white hover:bg-gray-900 text-sm">+ New Brandbook</a>
+
+      <!-- When NOT authenticated -->
+      <button id="login-btn-top" class="pill text-sm">Log in</button>
+
+      <!-- When authenticated -->
+      <div id="user-menu" class="relative hidden">
+        <button id="avatar-btn" class="w-9 h-9 rounded-full overflow-hidden ring-1 ring-gray-300 flex items-center justify-center text-white text-sm select-none"></button>
+        <div id="menu-panel" class="absolute right-0 mt-2 w-48 rounded-xl border border-gray-200 bg-white shadow-lg py-2 hidden">
+          <div class="px-3 py-2 text-xs text-gray-500" id="menu-name"></div>
+          <a href="/frontend/projects.html" class="block px-3 py-2 text-sm hover:bg-gray-50">Projects</a>
+          <a href="/frontend/account.html" class="block px-3 py-2 text-sm hover:bg-gray-50">Profile</a>
+          <button id="logout-btn" class="w-full text-left px-3 py-2 text-sm hover:bg-gray-50">Logout</button>
+        </div>
       </div>
-      <nav class="space-y-4 mt-4">
-        <a href="/frontend/about.html" class="block py-2 px-3 rounded hover:bg-gray-200">About Us</a>
-        <a href="/frontend/projects.html" class="block py-2 px-3 rounded hover:bg-gray-200">Projects</a>
-        <a href="/frontend/community.html" class="block py-2 px-3 rounded hover:bg-gray-200">Community</a>
-        <a href="/frontend/help.html" class="block py-2 px-3 rounded hover:bg-gray-200">Help</a>
-      </nav>
-    </aside>
-    
-<main class="flex-1 p-8">
-<h1 class='text-3xl font-bold mb-4'>Help</h1><a href='/auth/google/login' class='google-btn'>
-<span class="google-icon" aria-hidden="true">
-    <svg viewBox="0 0 48 48" width="18" height="18" xmlns="http://www.w3.org/2000/svg">
-    <path fill="#EA4335" d="M24 9.5c3.54 0 6.69 1.22 9.18 3.6l6.85-6.85C35.9 2.94 30.47 1 24 1 14.64 1 6.44 6.99 2.56 15.17l7.98 6.19C12.15 16.09 17.66 9.5 24 9.5z"/>
-    <path fill="#4285F4" d="M46.5 24c0-1.54-.14-3.02-.39-4.44H24v8.48h12.65c-.54 2.9-2.19 5.35-4.66 6.99l7.5 5.82C43.89 36.68 46.5 30.79 46.5 24z"/>
-    <path fill="#FBBC05" d="M10.54 28.36A14.5 14.5 0 0 1 9.5 24c0-1.51.26-2.97.74-4.32l-7.98-6.19C.85 16.45 0 20.12 0 24c0 3.91.85 7.61 2.36 10.94l8.18-6.58z"/>
-    <path fill="#34A853" d="M24 48c6.48 0 11.94-2.14 15.92-5.82l-7.5-5.82c-2.1 1.41-4.77 2.24-8.42 2.24-6.34 0-11.85-6.59-13.46-15.86l-8.18 6.58C6.44 41.01 14.64 48 24 48z"/>
-  </svg>
-</span>
-<span>Sign in with Google</span></a>
-</main>
+    </header>
+
+    <!-- Content -->
+    <section class="mx-auto w-full max-w-[820px] px-6 md:px-8 pb-24">
+      <h1 class="text-[44px] md:text-5xl font-extrabold tracking-tight mb-6">Help</h1>
+
+      <p class="text-[15px] leading-7 text-gray-800 mb-6">
+        We’re always here to help! If you have any questions, issues, or feedback, please contact
+        our support team using any of the methods below.<br/>
+        <span class="font-semibold">Ways to Get in Touch:</span>
+      </p>
+
+      <ul class="space-y-2 text-[15px] leading-7 text-gray-800 mb-6">
+        <li>📧 <span class="font-medium">Email:</span> <a href="mailto:support@yoursite.com" class="underline">support@yoursite.com</a></li>
+        <li>📞 <span class="font-medium">Phone:</span> +x (XXX) XXX-XX-XX <span class="text-gray-500">(Mon–Fri, 9 AM–6 PM)</span></li>
+        <li>💬 <span class="font-medium">Live Chat:</span> Available in the bottom-right corner of the website</li>
+        <li>📱 <span class="font-medium">Social Media:</span>
+          <a class="underline" href="#">Facebook</a>,
+          <a class="underline" href="#">Telegram</a>,
+          <a class="underline" href="#">VK</a>
+        </li>
+      </ul>
+
+      <div class="text-[15px] leading-7 text-gray-800 mb-8">
+        <p class="font-semibold mb-1">Frequently Asked Questions (FAQ)</p>
+        <p>
+          Before reaching out, check our <a href="#" class="underline">FAQ section</a> — your question might already be answered there.
+        </p>
+      </div>
+
+      <!-- Muted response-time block -->
+      <div class="text-[13px] leading-6 text-gray-400 mb-8">
+        <p class="mb-1">Response Time:</p>
+        <p>We strive to reply as quickly as possible:</p>
+        <ul class="list-disc ml-5">
+          <li>Email – within 24 hours (on business days).</li>
+          <li>Live Chat – under 15 minutes during working hours.</li>
+          <li>Social Media – 1–2 hours.</li>
+        </ul>
+        <p class="mt-2">
+          Thank you for choosing us! We appreciate your trust and will do our best to resolve your request promptly and efficiently.<br/>
+          🔹 For urgent inquiries, we recommend calling or using the live chat.
+        </p>
+      </div>
+
+      <button class="px-6 h-11 rounded-full bg-black text-white text-sm hover:bg-gray-800">
+        Chat with us
+      </button>
+    </section>
+
+    <!-- Login Modal (reuse from index) -->
+    <div id="login-modal" class="fixed inset-0 bg-black/50 flex items-center justify-center hidden">
+      <div class="relative bg-white w-[640px] max-w-[92vw] p-10 rounded-[36px] shadow-2xl">
+        <button id="close-login" class="absolute top-5 right-6 text-3xl leading-none">&times;</button>
+
+        <h3 class="text-center text-[34px] font-extrabold leading-tight mb-8">
+          Log in or create<br/>an account
+        </h3>
+
+        <a href="/auth/google/login"
+           class="group flex items-center w-full h-14 rounded-[999px] border border-gray-300 overflow-hidden mb-8">
+          <span class="h-full w-1/2 bg-[#EA4335]"></span>
+          <span class="ml-auto mr-5">
+            <svg viewBox="0 0 48 48" width="22" height="22">
+              <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.3 6.1 29.4 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.5-.4-3.5z"/>
+              <path fill="#FF3D00" d="M6.3 14.7L12.9 19.5C14.7 15.3 18.9 12 24 12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.3 6.1 29.4 4 24 4 16.7 4 10.4 8.1 6.3 14.7z"/>
+              <path fill="#4CAF50" d="M24 44c5.2 0 10.1-2 13.7-5.3L31.7 33C29.7 34.3 27 35 24 35c-5.2 0-9.6-3.3-11.3-8.1l-6.6 4.8C10.4 39.9 16.7 44 24 44z"/>
+              <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-1.8 4.8-6.1 8.1-11.3 8.1v8c7.3 0 13.6-4.7 16-11.3 1-2.5 1.6-5.2 1.6-8.3 0-1.3-.1-2.5-.4-3.5z"/>
+            </svg>
+          </span>
+        </a>
+
+        <div class="space-y-4 mb-6">
+          <input type="email" placeholder="e-mail"
+                 class="w-full h-14 rounded-[999px] bg-gray-100 px-5 outline-none border border-transparent focus:border-gray-300"/>
+          <input type="password" placeholder="paswort"
+                 class="w-full h-14 rounded-[999px] bg-gray-100 px-5 outline-none border border-transparent focus:border-gray-300"/>
+        </div>
+
+        <button class="w-full h-14 rounded-[999px] bg-black text-white text-lg font-semibold hover:bg-gray-900">
+          Log in
+        </button>
+
+        <div class="text-center mt-6 text-[15px]">
+          <span>no aacount? </span>
+          <a class="text-blue-600 underline" href="/frontend/register.html">Create one</a>
+          <div class="mt-3">
+            <a class="text-blue-600 underline" href="/frontend/reset.html">Reset password</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
 </div>
-</body></html>
+
+<!-- Scripts -->
+<script>
+  // helpers
+  const COLORS=["#6366F1","#EF4444","#10B981","#F59E0B","#3B82F6","#EC4899","#06B6D4","#84CC16"];
+  function colorBy(str){let h=0;for(let i=0;i<str.length;i++)h=(h*31+str.charCodeAt(i))|0;return COLORS[Math.abs(h)%COLORS.length];}
+  function initialOf(name,email){const s=(name||email||"U").trim();return s?s[0].toUpperCase():"U";}
+  function show(el){el&&el.classList.remove('hidden');}
+  function hide(el){el&&el.classList.add('hidden');}
+
+  // header auth + modal
+  async function initAuthUI(){
+    const loginBtnTop=document.getElementById('login-btn-top');
+    const userMenu=document.getElementById('user-menu');
+    const avatarBtn=document.getElementById('avatar-btn');
+    const menuPanel=document.getElementById('menu-panel');
+    const menuName=document.getElementById('menu-name');
+    const logoutBtn=document.getElementById('logout-btn');
+
+    const modal=document.getElementById('login-modal');
+    const closeLogin=document.getElementById('close-login');
+    loginBtnTop?.addEventListener('click',()=>show(modal));
+    closeLogin?.addEventListener('click',()=>hide(modal));
+    modal?.addEventListener('click',e=>{ if(e.target===modal) hide(modal); });
+
+    try{
+      const res=await fetch('/users/me',{credentials:'include'});
+      if(!res.ok) throw new Error('unauth');
+      const user=await res.json();
+
+      hide(loginBtnTop);
+      show(userMenu);
+
+      const name=user.name||user.email||''; const email=user.email||'';
+      if(user.avatar_url){
+        avatarBtn.innerHTML=`<img src="${user.avatar_url}" alt="avatar" class="w-full h-full object-cover">`;
+      }else{
+        avatarBtn.textContent=(name||email)[0].toUpperCase();
+        avatarBtn.style.background=colorBy(email||name);
+      }
+
+      let open=false;
+      function toggle(){ open=!open; menuPanel.classList.toggle('hidden',!open); }
+      function close(){ open=false; menuPanel.classList.add('hidden'); }
+      avatarBtn.addEventListener('click',(e)=>{ e.stopPropagation(); toggle(); });
+      document.addEventListener('click',close);
+      menuName.textContent=name||email;
+
+      logoutBtn?.addEventListener('click',async()=>{
+        await fetch('/users/logout',{method:'POST',credentials:'include'});
+        location.reload();
+      });
+    }catch(e){
+      // not authenticated — keep login button
+    }
+  }
+  document.addEventListener('DOMContentLoaded', initAuthUI);
+</script>
+</body>
+</html>
