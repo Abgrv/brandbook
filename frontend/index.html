@@ -6,14 +6,35 @@
   <script src='https://cdn.tailwindcss.com'></script>
   <title>Brandbook Home</title>
   <style>
+    /* FIX: единый базовый масштаб, без «прыжков» текста на iOS/Safari */
+    html, body { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+    body { font-size: 16px; } /* единый базовый размер */
+
     .pill{padding:.5rem 1rem;border:1px solid #ddd;border-radius:9999px;background:#fff}
+
+    /* FIX: Google button — фирменный белый, без выпадения цветов и без фильтров */
+    .google-btn{
+      display:inline-flex;align-items:center;gap:10px;height:40px;
+      padding:0 14px;border:1px solid #dadce0;border-radius:9999px;
+      background:#fff;color:#3c4043;font-weight:500;font-size:14px;line-height:1;
+      transition:box-shadow .15s ease, background .15s ease;text-decoration:none
+    }
+    .google-btn:hover{background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.10)}
+    .google-icon{width:18px;height:18px;display:block;filter:none!important;opacity:1!important}
+
+    /* FIX: «якорный» sidebar */
+    .sidebar{
+      position: sticky; top: 0; height: 100vh; /* прилипает к верху и занимает всю высоту окна */
+      overflow-y: auto; /* если меню станет длинным */
+      background: #fff;
+    }
   </style>
 </head>
 <body class="font-sans text-gray-900">
 <div class="flex min-h-screen">
 
   <!-- Sidebar -->
-  <aside class="w-64 shrink-0 hidden md:block">
+  <aside class="sidebar w-64 shrink-0 hidden md:block">
     <div class="px-6 pt-6 pb-4">
       <a href="/frontend/index.html" class="inline-flex items-center space-x-3">
         <div class="w-10 h-10 rounded-full bg-gray-300"></div>
@@ -63,11 +84,10 @@
 
       <!-- UNDER-HEAD AUTH (visible only when not logged in) -->
       <div id="underhead-auth" class="flex items-center gap-3 mb-6">
-        <!-- Google button -->
-        <a href="/auth/google/login"
-           class="inline-flex items-center gap-3 rounded-full border border-gray-300 bg-white pl-0 pr-4 h-10">
-          <!-- Google icon -->
-          <span aria-hidden="true">
+        <!-- FIX: белая «фирменная» кнопка Google без красной полоски -->
+        <a href="/auth/google/login" class="google-btn">
+          <span class="google-icon" aria-hidden="true">
+            <!-- «правильная» цветная G -->
             <svg viewBox="0 0 48 48" width="18" height="18">
               <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.3 6.1 29.4 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.5-.4-3.5z"/>
               <path fill="#FF3D00" d="M6.3 14.7L12.9 19.5C14.7 15.3 18.9 12 24 12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.3 6.1 29.4 4 24 4 16.7 4 10.4 8.1 6.3 14.7z"/>
@@ -75,7 +95,7 @@
               <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-1.8 4.8-6.1 8.1-11.3 8.1v8c7.3 0 13.6-4.7 16-11.3 1-2.5 1.6-5.2 1.6-8.3 0-1.3-.1-2.5-.4-3.5z"/>
             </svg>
           </span>
-          <span class="text-sm">Sign in with Google</span>
+          <span>Sign in with Google</span>
         </a>
 
         <!-- Plain login opens modal -->
@@ -137,44 +157,44 @@
       </div>
     </div>
 
-    <!-- Modal (styled as your mock) -->
+    <!-- Login Modal (красная полоска — только здесь) -->
     <div id="login-modal" class="fixed inset-0 bg-black/50 flex items-center justify-center hidden">
-      <div class="relative bg-white w-[640px] max-w-[92vw] p-10 rounded-[36px] shadow-2xl">
+      <div class="relative bg-white w-[640px] max-w-[92vw] p-8 rounded-2xl shadow-2xl">
         <button id="close-login" class="absolute top-5 right-6 text-3xl leading-none">&times;</button>
 
-        <h3 class="text-center text-[34px] font-extrabold leading-tight mb-8">
+        <h3 class="text-center text-[30px] md:text-[34px] font-extrabold leading-tight mb-8">
           Log in or create<br/>an account
         </h3>
 
-        <!-- Big Google button -->
+        <!-- FIX: фирменная белая кнопка + КРАСНАЯ ПОЛОСА слева только в модалке -->
         <a href="/auth/google/login"
-           class="group flex items-center w-full h-14 rounded-[999px] border border-gray-300 overflow-hidden mb-8">
-          <span class="h-full w-1/2 bg-[#EA4335]"></span>
-          <span class="ml-auto mr-5">
-            <svg viewBox="0 0 48 48" width="22" height="22">
-              <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.3 6.1 29.4 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.5-.4-3.5z"/>
+           class="relative google-btn w-full justify-center mb-6 rounded-md">
+          <span class="absolute left-0 top-0 bottom-0 w-40 rounded-l-md bg-[#EA4335]"></span> <!-- красная полоса -->
+          <span class="relative google-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="18" height="18">
+              <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.3 6.1 29.4 4 24 4 16.7 4 10.4 8.1 6.3 14.7z"/>
               <path fill="#FF3D00" d="M6.3 14.7L12.9 19.5C14.7 15.3 18.9 12 24 12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.3 6.1 29.4 4 24 4 16.7 4 10.4 8.1 6.3 14.7z"/>
               <path fill="#4CAF50" d="M24 44c5.2 0 10.1-2 13.7-5.3L31.7 33C29.7 34.3 27 35 24 35c-5.2 0-9.6-3.3-11.3-8.1l-6.6 4.8C10.4 39.9 16.7 44 24 44z"/>
               <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-1.8 4.8-6.1 8.1-11.3 8.1v8c7.3 0 13.6-4.7 16-11.3 1-2.5 1.6-5.2 1.6-8.3 0-1.3-.1-2.5-.4-3.5z"/>
             </svg>
           </span>
+          <span class="relative">Sign in with Google</span>
         </a>
 
-        <!-- Inputs -->
-        <div class="space-y-4 mb-6">
-          <input type="email" placeholder="e-mail"
-                 class="w-full h-14 rounded-[999px] bg-gray-100 px-5 outline-none border border-transparent focus:border-gray-300"/>
-          <input type="password" placeholder="paswort"
-                 class="w-full h-14 rounded-[999px] bg-gray-100 px-5 outline-none border border-transparent focus:border-gray-300"/>
-        </div>
+        <!-- Email/password form -->
+        <form id="email-login-form" class="space-y-4 mb-6">
+          <input id="login-email" type="email" placeholder="e-mail"
+                 class="w-full h-12 rounded-lg bg-gray-100 px-4 outline-none border border-transparent focus:border-gray-300"/>
+          <input id="login-password" type="password" placeholder="password"
+                 class="w-full h-12 rounded-lg bg-gray-100 px-4 outline-none border border-transparent focus:border-gray-300"/>
+          <button id="email-login-submit"
+                  class="w-full h-12 rounded-lg bg-black text-white text-base font-semibold hover:bg-gray-900">
+            Log in
+          </button>
+          <p id="login-error" class="text-center text-sm text-red-600 hidden">Invalid email or password</p>
+        </form>
 
-        <!-- Submit -->
-        <button class="w-full h-14 rounded-[999px] bg-black text-white text-lg font-semibold hover:bg-gray-900">
-          Log in
-        </button>
-
-        <!-- Footer links -->
-        <div class="text-center mt-6 text-[15px]">
+        <div class="text-center text-[15px]">
           <span>no aacount? </span>
           <a class="text-blue-600 underline" href="/frontend/register.html">Create one</a>
           <div class="mt-3">
@@ -184,19 +204,32 @@
       </div>
     </div>
 
+    <!-- Success Modal -->
+    <div id="auth-success" class="fixed inset-0 bg-black/50 flex items-center justify-center hidden">
+      <div class="relative bg-white w-[420px] max-w-[92vw] p-8 rounded-2xl shadow-2xl text-center">
+        <button id="auth-success-close" class="absolute top-4 right-5 text-2xl">&times;</button>
+        <div class="mx-auto mb-6">
+          <svg width="84" height="84" viewBox="0 0 84 84" fill="none">
+            <path d="M24 43.5l12 12 24-30" stroke="#22C55E" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="text-xl font-semibold">Success</div>
+      </div>
+    </div>
+
   </main>
 </div>
 
 <!-- Scripts -->
 <script>
-  // helpers
   const COLORS=["#6366F1","#EF4444","#10B981","#F59E0B","#3B82F6","#EC4899","#06B6D4","#84CC16"];
   function colorBy(str){let h=0;for(let i=0;i<str.length;i++)h=(h*31+str.charCodeAt(i))|0;return COLORS[Math.abs(h)%COLORS.length];}
-  function initialOf(name,email){const s=(name||email||"U").trim();return s?s[0].toUpperCase():"U";}
   function show(el){el&&el.classList.remove('hidden');}
   function hide(el){el&&el.classList.add('hidden');}
+  function initialOf(name,email){const s=(name||email||"U").trim();return s?s[0].toUpperCase():"U";}
+  function getQueryParam(n){return new URLSearchParams(location.search).get(n);}
+  function removeQueryParam(n){const u=new URL(location.href);u.searchParams.delete(n);history.replaceState({}, "", u.toString());}
 
-  // header auth + under-head buttons visibility
   async function initAuthUI(){
     const loginBtnTop=document.getElementById('login-btn-top');
     const userMenu=document.getElementById('user-menu');
@@ -206,7 +239,7 @@
     const logoutBtn=document.getElementById('logout-btn');
     const underAuth=document.getElementById('underhead-auth');
 
-    // modal
+    // modal open/close
     const modal=document.getElementById('login-modal');
     const loginBtn=document.getElementById('login-btn');
     const closeLogin=document.getElementById('close-login');
@@ -220,16 +253,15 @@
       if(!res.ok) throw new Error('unauth');
       const user=await res.json();
 
-      // hide login controls, show avatar
       hide(loginBtnTop); hide(underAuth);
       show(userMenu);
 
       const name=user.name||user.email||''; const email=user.email||'';
-      const init=initialOf(name,email);
       if(user.avatar_url){
         avatarBtn.innerHTML=`<img src="${user.avatar_url}" alt="avatar" class="w-full h-full object-cover">`;
       }else{
-        avatarBtn.textContent=init; avatarBtn.style.background=colorBy(email||name);
+        avatarBtn.textContent=initialOf(name,email);
+        avatarBtn.style.background=colorBy(email||name);
       }
 
       let open=false;
@@ -243,12 +275,51 @@
         await fetch('/users/logout',{method:'POST',credentials:'include'});
         location.reload();
       });
-
-    }catch(e){
-      // not authenticated: keep both buttons
-    }
+    }catch(e){ /* not authenticated */ }
   }
-  document.addEventListener('DOMContentLoaded', initAuthUI);
+
+  function maybeShowAuthSuccess(){
+    if(getQueryParam('auth')!=='success') return;
+    const box=document.getElementById('auth-success');
+    const closeBtn=document.getElementById('auth-success-close');
+    show(box);
+    const close=()=>{ hide(box); removeQueryParam('auth'); };
+    closeBtn?.addEventListener('click', close);
+    setTimeout(close, 1600);
+  }
+
+  document.addEventListener('DOMContentLoaded', ()=>{
+    initAuthUI();
+    maybeShowAuthSuccess();
+
+    // email/password form handler
+    const form=document.getElementById('email-login-form');
+    if(!form) return;
+    const emailEl=document.getElementById('login-email');
+    const passEl=document.getElementById('login-password');
+    const submit=document.getElementById('email-login-submit');
+    const errEl=document.getElementById('login-error');
+
+    form.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      errEl?.classList.add('hidden');
+      submit.disabled=true; submit.textContent='Signing in...';
+      try{
+        const res=await fetch('/users/login',{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          credentials:'include',
+          body:JSON.stringify({ email: emailEl.value.trim(), password: passEl.value })
+        });
+        if(!res.ok){ errEl?.classList.remove('hidden'); return; }
+        window.location.replace('/frontend/index.html?auth=success');
+      }catch(_){
+        errEl?.classList.remove('hidden');
+      }finally{
+        submit.disabled=false; submit.textContent='Log in';
+      }
+    });
+  });
 </script>
 </body>
 </html>

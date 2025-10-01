@@ -4,7 +4,7 @@ from __future__ import annotations
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import RedirectResponse
 from jose import jwt
 from sqlalchemy.orm import Session
@@ -84,14 +84,6 @@ async def _authorize_google_token(request: Request, **kwargs) -> tuple[dict, Opt
         )
         token["userinfo"] = userinfo
     return token, state_data
-
-# def _resolve_redirect_uri(request: Request) -> str:
-#     """Return redirect URI configured explicitly or build it from the current request."""
-
-#     if not OAUTH_REDIRECT_URI or OAUTH_REDIRECT_URI.lower() == "auto":
-#         # request.url_for уже вернёт абсолютный URL c текущим хостом/портом
-#         return str(request.url_for("google_callback"))
-#     return OAUTH_REDIRECT_URI
 
 def issue_jwt(user_id) -> str:
     now = datetime.now(tz=timezone.utc)  # всегда UTC
@@ -197,8 +189,13 @@ async def google_callback(request: Request, db: Session = Depends(get_db)):
     if final_redirect and not final_redirect.startswith("/"):
         final_redirect = None
 
-    redirect_target = final_redirect or "/frontend/index.html"
-    resp = RedirectResponse(url=redirect_target)
+    # redirect_target = final_redirect or "/frontend/index.html"
+    # resp = RedirectResponse(url=redirect_target)
+    resp = RedirectResponse(
+        url="/frontend/index.html?auth=success",   # было: /frontend/index.html
+        status_code=status.HTTP_303_SEE_OTHER
+        )
+
     resp.set_cookie(
         key="access_token",
         value=token_jwt,

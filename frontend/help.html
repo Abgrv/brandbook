@@ -5,13 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <script src="https://cdn.tailwindcss.com"></script>
   <title>Help — WEB®BRAND</title>
-  <style>.pill{padding:.5rem 1rem;border:1px solid #ddd;border-radius:9999px;background:#fff}</style>
+  <style>
+  /* всегда резервируем место под вертикальный скроллбар (исключает «прыжок» ширины) */
+  html { scrollbar-gutter: stable both-edges; -webkit-text-size-adjust:100%; text-size-adjust:100%; }
+  body { font-size:16px; }
+
+  /* единый каркас */
+  .layout { display:flex; min-height:100svh; }             /* svh = стабильная высота на моб. */
+  .sidebar {
+    position: sticky; top: 0; height: 100svh;              /* «якорь» слева */
+    width: 16rem; flex-shrink: 0; background:#fff;         /* w-64 эквивалент */
+    border-right: 1px solid rgba(0,0,0,.06);               /* тонкая линия справа как на Projects */
+  }
+  .main { flex:1; }
+  </style>
+
 </head>
 <body class="font-sans text-gray-900">
 <div class="flex min-h-screen">
 
   <!-- Sidebar -->
-  <aside class="w-64 shrink-0 hidden md:block">
+  <aside class="sidebar w-64 shrink-0 hidden md:block">
     <div class="px-6 pt-6 pb-4">
       <a href="/frontend/index.html" class="inline-flex items-center space-x-3">
         <div class="w-10 h-10 rounded-full bg-gray-300"></div>

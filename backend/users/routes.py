@@ -1,6 +1,6 @@
 # app/users/routes.py
 
-from fastapi import APIRouter, Depends, HTTPException, Response
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
 from jose import jwt
@@ -13,6 +13,8 @@ from backend.users.models import User
 from config import JWT_SECRET, JWT_ALG, JWT_EXPIRES_MIN
 
 router = APIRouter(prefix="/users", tags=["Users"])
+
+COOKIE_NAME = "access_token"
 
 # 📌 Настройка шифрования паролей
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -68,32 +70,33 @@ def register_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 
 
 # 📌 Логин пользователя
-@router.post("/login", response_model=schemas.Token)
-def login(
-    user: schemas.UserLogin,
-    response: Response,
-    db: Session = Depends(get_db),
-):
+@router.post("/login")
+def login(user: schemas.UserLogin, response: Response, db: Session = Depends(get_db)):
     db_user = db.query(models.User).filter(models.User.email == user.email).first()
     if not db_user or not verify_password(user.password, db_user.password_hash):
         raise HTTPException(status_code=401, detail="Неверный email или пароль")
 
+    # выдаём JWT
+    now = datetime.utcnow()
+    payload = {
+        "sub": str(db_user.id),
+        "iat": now,
+        "exp": now + timedelta(minutes=JWT_EXPIRES_MIN),
+    }
+    token = jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALG)
 
-    # Генерация токена
-    access_token = create_access_token(
-        data={"sub": str(db_user.id)},
-        expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    )
-
-    # кладём токен в HttpOnly cookie
+    # СТАВИМ HttpOnly cookie (как в Google OAuth)
     response.set_cookie(
-        key="access_token",
-        value=access_token,
+        key=COOKIE_NAME,
+        value=token,
         httponly=True,
+        secure=False,      # локально False; на проде True (https)
         samesite="lax",
-        secure=False  # ⚠️ в проде лучше True (https)
+        max_age=JWT_EXPIRES_MIN * 60,
+        path="/",
     )
-    return {"access_token": access_token, "token_type": "bearer"}
+    # можно вернуть 204 или ok-json
+    return {"ok": True}
 
 
 #Защищённый маршрут
@@ -105,9 +108,8 @@ def me(user: User = Depends(current_user)):
 
 
 # logout — очистка cookie
-@router.post("/logout")
+@router.post("/logout", status_code=status.HTTP_204_NO_CONTENT)
 def logout(response: Response):
-    response.delete_cookie("access_token")
-    return {"message": "Logged out"}
+    response.delete_cookie(COOKIE_NAME, path="/")
 
 
